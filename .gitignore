@@ -1,0 +1,11 @@
+﻿# Visual Studio/Project files
+[Bb]in/
+[Oo]bj/
+*.user
+*.suo
+*.sln.docstates
+.vs/
+
+# NuGet packages
+/packages/
+*.nupkg
