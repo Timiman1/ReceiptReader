@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using ReceiptReader.Application.Analyzers;
 using ReceiptReader.Application.FileStorage;
 using ReceiptReader.Application.Repositories;
+using ReceiptReader.Application.Services;
 using ReceiptReader.Application.Utility;
 using ReceiptReader.Application.Validation;
 using ReceiptReader.Infrastructure.Analyzers;
@@ -37,6 +38,10 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// Application Services
+builder.Services.AddScoped<IReceiptService, ReceiptService>();
+builder.Services.AddScoped<IFileRetrievalService, FileRetrievalService>();
 
 // File Validator
 builder.Services.AddSingleton<IFileValidator, FileValidator>();
