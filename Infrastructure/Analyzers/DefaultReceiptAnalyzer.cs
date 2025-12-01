@@ -5,7 +5,6 @@ using ReceiptReader.Application.ReceiptDataExtractors;
 using ReceiptReader.Application.Repositories;
 using ReceiptReader.Application.Utility;
 using ReceiptReader.Domain;
-using System.Text.RegularExpressions;
 
 namespace ReceiptReader.Infrastructure.Analyzers
 {
@@ -19,6 +18,7 @@ namespace ReceiptReader.Infrastructure.Analyzers
         private readonly IReceiptDataExtractor _receiptDataExtractor;
         private readonly IHashCalculator _hashCalculator;
         private readonly IReceiptInfoMapper _receiptInfoMapper;
+        private readonly IReceiptKeywordClassifier _receiptKeywordClassifier;
 
         public DefaultReceiptAnalyzer(
             ILogger<DefaultReceiptAnalyzer> logger,
@@ -28,7 +28,8 @@ namespace ReceiptReader.Infrastructure.Analyzers
             IHighCostRawTextExtractor highCostOcrFilter,
             IReceiptDataExtractor receiptDataExtractor,
             IHashCalculator hashCalulator,
-            IReceiptInfoMapper receiptInfoMapper)
+            IReceiptInfoMapper receiptInfoMapper,
+            IReceiptKeywordClassifier receiptKeywordClassifier)
         {
             _logger = logger;
             _analysisLogRepository = analysisLogRepository;
@@ -38,12 +39,14 @@ namespace ReceiptReader.Infrastructure.Analyzers
             _receiptDataExtractor = receiptDataExtractor;
             _hashCalculator = hashCalulator;
             _receiptInfoMapper = receiptInfoMapper;
+            _receiptKeywordClassifier = receiptKeywordClassifier;
         }
 
         public async Task<AnalysisResult> AnalyzeAsync(Stream stream, Guid fileId)
         {
             using var ms = new MemoryStream();
             await stream.CopyToAsync(ms);
+            ms.Position = 0;
 
             string fileHash = _hashCalculator.CalculateHash(ms);
 
@@ -71,7 +74,7 @@ namespace ReceiptReader.Infrastructure.Analyzers
             ms.Position = 0;
             string lowCostRawOcrText = await _lowCostOcrFilter.GetRawTextAsync(ms);
             
-            if (!IsReceiptLikely(lowCostRawOcrText))
+            if (!_receiptKeywordClassifier.IsReceiptLikely(lowCostRawOcrText))
             {
                 var reason = "Input document failed the low cost content filter check. Expected key financial/date keywords were not detected.";
                 await LogFailureAndThrowAsync(fileHash, AnalysisStatus.FilteredOut, reason);
@@ -80,7 +83,7 @@ namespace ReceiptReader.Infrastructure.Analyzers
             ms.Position = 0;
             string highCostRawOcrText = await _highCostOcrFilter.GetRawTextAsync(ms);
 
-            if (!IsReceiptLikely(highCostRawOcrText))
+            if (!_receiptKeywordClassifier.IsReceiptLikely(highCostRawOcrText))
             {
                 var reason = "Input document failed the high cost content filter check. Expected key financial/date keywords were not detected.";
                 await LogFailureAndThrowAsync(fileHash, AnalysisStatus.FilteredOut, reason);
@@ -120,45 +123,6 @@ namespace ReceiptReader.Infrastructure.Analyzers
 
                 throw;
             }
-        }
-
-        private bool IsReceiptLikely(string rawText)
-        {
-            if (string.IsNullOrWhiteSpace(rawText) || rawText.Length < 20)
-            {
-                // To short to be a receipt
-                return false;
-            }
-
-            var lowerText = rawText.ToLowerInvariant();
-
-            bool foundTotalKeyword = lowerText.Contains("total") ||
-                                           lowerText.Contains("tot") ||
-                                           lowerText.Contains("summa") ||
-                                           lowerText.Contains("belopp") ||
-                                           lowerText.Contains("kortköp");
-
-            bool foundDateKeyword = lowerText.Contains("datum") ||
-                                               lowerText.Contains("dat") ||
-                                               lowerText.Contains("tid") ||
-                                               Regex.Match(lowerText, @"\d{4}-?\d{2}-?\d{2}|\d{2}/\?d{2}/\?d{4}").Success;
-
-            bool foundCurrencyKeyword = lowerText.Contains("kr") ||
-                                        lowerText.Contains("sek") ||
-                                        lowerText.Contains("$") ||
-                                        lowerText.Contains("£");
-
-            if (foundTotalKeyword && foundDateKeyword)
-            {
-                return true;
-            }
-
-            if (foundTotalKeyword && foundCurrencyKeyword)
-            {
-                return true;
-            }
-
-            return false;
         }
 
         private async Task LogFailureAndThrowAsync(

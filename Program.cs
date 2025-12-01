@@ -32,7 +32,6 @@ builder.Services
         builder.Configuration.GetSection(ReceiptDataExtractionOptions.SectionName)
 );
 
-var apiKey = builder.Configuration["AzureAIDocumentIntelligence:ApiKey"];
 // Controllers
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -51,7 +50,8 @@ builder.Services.AddScoped<IFileStorage, LocalFileStorage>();
 // Receipt Analyzer
 builder.Services
     .AddScoped<IReceiptAnalyzer, DefaultReceiptAnalyzer>()
-    .AddScoped<IReceiptInfoMapper, DefaultReceiptInfoMapper>();
+    .AddScoped<IReceiptInfoMapper, DefaultReceiptInfoMapper>()
+    .AddScoped<IReceiptKeywordClassifier, DefaultReceiptKeywordClassifier>();
 
 // Hash Calculator (for file caching needs).
 builder.Services.AddSingleton<IHashCalculator, HashCalculator>();
