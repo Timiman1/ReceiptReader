@@ -9,3 +9,13 @@
 # NuGet packages
 /packages/
 *.nupkg
+
+# Local Database Files
+*.db
+*.sqlite
+*.sqlite3
+receipts.db
+
+#SQLite WAL and SHM
+*.db-shm
+*.db-wal
