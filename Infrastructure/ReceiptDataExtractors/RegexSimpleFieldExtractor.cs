@@ -68,7 +68,7 @@ namespace ReceiptReader.Infrastructure.ReceiptDataExtractors
                 var vendorNameLineCandidate = lines[index].Trim();
                 var match = Regex.Match(
                     vendorNameLineCandidate, 
-                    @"\b(?:ICA|Coop|Willys|Hemköp|Lidl|Systembolaget|City Gross|Pressbyrån|Apoteket|Kronans Apotek|Apotek Hjärtat|Elon|Jula|Biltema|Rusta|ÖoB|Lekia)\b", 
+                    @"\b(?:ICA|Coop|Willys|Hemköp|Lidl|Systembolaget|City Gross|Pressbyrån|Apoteket|Kronans Apotek|Apotek Hjärtat|Elon|Jula|Biltema|Rusta|ÖoB|Lekia|Gekås Ullared AB)\b", 
                     RegexOptions.IgnoreCase
                 );
 
@@ -78,19 +78,31 @@ namespace ReceiptReader.Infrastructure.ReceiptDataExtractors
                 }
                 else
                 {
+                    var result = vendorNameLineCandidate;
+
                     var phoneMatch = Regex.Match(
-                        vendorNameLineCandidate,
+                        result,
                         @"\b(Tel:?\s*\d+|Telefon:?\s*\d+)\b", 
                         RegexOptions.IgnoreCase);
 
                     if (phoneMatch.Success)
                     {
-                        vendorNameLineCandidate = RemoveAfterSubstring(vendorNameLineCandidate, phoneMatch.Value).Trim();
+                        result = RemoveAfterSubstring(result, phoneMatch.Value).Trim();
+                    }
+
+                    var postalCodeMatch = Regex.Match(
+                        result,
+                        @"\b\d{3}\s\d{2}\b",
+                        RegexOptions.None);
+
+                    if (postalCodeMatch.Success)
+                    {
+                        result = RemoveAfterSubstring(result, postalCodeMatch.Value).Trim();
                     }
 
                     return new ParsedField<string?>
                     {
-                        Value = vendorNameLineCandidate,
+                        Value = result,
                         Confidence = 1.0,
                         SourceText = vendorNameLineCandidate
                     };
@@ -107,7 +119,7 @@ namespace ReceiptReader.Infrastructure.ReceiptDataExtractors
 
         private ParsedField<decimal?> ParseTotalAmount(string rawText)
         {
-            var match = Regex.Match(rawText, @"(?:Total|Summa|Kortköp)\s*[:\-]?\s*(\d+[.,]\s?\d{2})", RegexOptions.IgnoreCase);
+            var match = Regex.Match(rawText, @"\b(?:Total|Totalt|Summa|Kortköp|Totalt SEK|Köp|SEK)\s*[:\-]?\s*(\d+[.,]\s?\d{2})\b", RegexOptions.IgnoreCase);
             if (match.Success == false)
             {
                 return new ParsedField<decimal?> { Value = null, Confidence = 0.0, SourceText = null };
