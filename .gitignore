@@ -10,12 +10,14 @@
 /packages/
 *.nupkg
 
-# Local Database Files
-*.db
-*.sqlite
-*.sqlite3
-receipts.db
+# Temp file storage / User uploaded data
+wwwroot/uploads/
 
-#SQLite WAL and SHM
-*.db-shm
-*.db-wal
+# Local Database Files
+**/*.db
+**/*.sqlite
+**/*.sqlite3
+
+# SQLite WAL and SHM
+**/*.db-shm
+**/*.db-wal
