@@ -50,22 +50,16 @@ namespace ReceiptReader.Infrastructure.Services
             var maxFileSize = _fileSettings.MaxFileSizeInBytes;
             if (fileLength > maxFileSize)
             {
-                return new ReceiptServiceResult
-                {
-                    IsSuccess = false,
-                    ErrorMessage = $"File size exceeds the limit of {maxFileSize / 1024 / 1024} MB."
-                };
+                return new ReceiptServiceFailure(
+                    $"File size exceeds the limit of {maxFileSize / 1024 / 1024} MB.");
             }
 
             // Validate file type
             if (!_fileValidator.HasAllowedExtension(fileName) ||
                 !_fileValidator.IsAllowedMimeType(contentType))
             {
-                return new ReceiptServiceResult
-                {
-                    IsSuccess = false,
-                    ErrorMessage = "Unsupported file format or content type."
-                };
+                return new ReceiptServiceFailure(
+                    "Unsupported file format or content type.");
             }
 
             // Save file
@@ -81,33 +75,24 @@ namespace ReceiptReader.Infrastructure.Services
                 if (analysisResult == null)
                 {
                     _logger.LogError("Analyzer returned null result for fileId {FileId}", fileId);
-                    return new ReceiptServiceResult
-                    {
-                        IsSuccess = false,
-                        ErrorMessage = "Analysis failed - analyzer returned no result."
-                    };
+                    return new ReceiptServiceFailure(
+                        "Analysis failed - analyzer returned no result.");
                 }
 
                 if (analysisResult.Receipt == null)
                 {
                     _logger.LogError("Analysis completed but no receipt was returned for fileId {FileId}", fileId);
-                    return new ReceiptServiceResult
-                    {
-                        IsSuccess = false,
-                        ErrorMessage = "Analysis completed but no receipt data was extracted."
-                    };
+                    return new ReceiptServiceFailure(
+                        "Analysis completed but no receipt data was extracted.");
                 }
                 
-                return new ReceiptServiceResult
-                {
-                    IsSuccess = true,
-                    Receipt = analysisResult.Receipt
-                };
+                return new ReceiptServiceSuccess(analysisResult.Receipt);
             }
             catch (Exception ex)
             {
-                // Clean up database record on failure
-                // Note: File remains in storage for potential debugging/reprocessing
+                // Attempt to clean up any database records that may have been created
+                // Note: File remains in storage intentionally for debugging/reprocessing
+                // Note: This is a safe operation - DeleteAsync does nothing if receipt doesn't exist
                 try
                 {
                     await _receiptRepository.DeleteAsync(fileId);
@@ -115,24 +100,18 @@ namespace ReceiptReader.Infrastructure.Services
                 catch (Exception cleanupEx)
                 {
                     _logger.LogError(cleanupEx, "Failed to clean up receipt record for fileId {FileId} after analysis failure.", fileId);
-                    // Continue with original error handling
+                    // Continue with original error handling - cleanup failure is secondary
                 }
 
                 if (ex is ReceiptAnalyzerException)
                 {
-                    return new ReceiptServiceResult
-                    {
-                        IsSuccess = false,
-                        ErrorMessage = $"File content rejected: {ex.Message}"
-                    };
+                    return new ReceiptServiceFailure(
+                        $"File content rejected: {ex.Message}");
                 }
 
                 _logger.LogError(ex, "An unexpected error occurred during receipt processing.");
-                return new ReceiptServiceResult
-                {
-                    IsSuccess = false,
-                    ErrorMessage = "An unexpected error occurred."
-                };
+                return new ReceiptServiceFailure(
+                    "An unexpected error occurred.");
             }
         }
     }

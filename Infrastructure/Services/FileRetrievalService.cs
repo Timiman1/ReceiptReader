@@ -29,31 +29,18 @@ namespace ReceiptReader.Infrastructure.Services
 
                 if (extension == null)
                 {
-                    return new FileRetrievalResult
-                    {
-                        IsSuccess = false,
-                        ErrorMessage = "File not found."
-                    };
+                    return new FileRetrievalFailure("File not found.");
                 }
 
                 var stream = await _fileStorage.OpenReadAsync(fileId);
                 var contentType = _contentTypeResolver.GetContentType(extension)
                     ?? "application/octet-stream";
 
-                return new FileRetrievalResult
-                {
-                    IsSuccess = true,
-                    FileStream = stream,
-                    ContentType = contentType
-                };
+                return new FileRetrievalSuccess(stream, contentType);
             }
             catch (FileNotFoundException)
             {
-                return new FileRetrievalResult
-                {
-                    IsSuccess = false,
-                    ErrorMessage = "File not found."
-                };
+                return new FileRetrievalFailure("File not found.");
             }
         }
     }

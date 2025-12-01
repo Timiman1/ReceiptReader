@@ -14,10 +14,40 @@ namespace ReceiptReader.Application.Services
         Task<ReceiptServiceResult> ProcessReceiptAsync(Stream fileStream, string fileName, string contentType, long fileLength);
     }
 
-    public class ReceiptServiceResult
+    /// <summary>
+    /// Base result type for receipt service operations.
+    /// Use pattern matching or IsSuccess to determine the actual result type.
+    /// </summary>
+    public abstract class ReceiptServiceResult
     {
-        public bool IsSuccess { get; set; }
-        public string? ErrorMessage { get; set; }
-        public ReceiptInfo? Receipt { get; set; }
+        public abstract bool IsSuccess { get; }
+    }
+
+    /// <summary>
+    /// Represents a successful receipt processing result.
+    /// </summary>
+    public class ReceiptServiceSuccess : ReceiptServiceResult
+    {
+        public override bool IsSuccess => true;
+        public ReceiptInfo Receipt { get; }
+
+        public ReceiptServiceSuccess(ReceiptInfo receipt)
+        {
+            Receipt = receipt ?? throw new ArgumentNullException(nameof(receipt));
+        }
+    }
+
+    /// <summary>
+    /// Represents a failed receipt processing result.
+    /// </summary>
+    public class ReceiptServiceFailure : ReceiptServiceResult
+    {
+        public override bool IsSuccess => false;
+        public string ErrorMessage { get; }
+
+        public ReceiptServiceFailure(string errorMessage)
+        {
+            ErrorMessage = errorMessage ?? throw new ArgumentNullException(nameof(errorMessage));
+        }
     }
 }

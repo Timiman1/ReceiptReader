@@ -11,11 +11,41 @@ namespace ReceiptReader.Application.Services
         Task<FileRetrievalResult> GetFileAsync(Guid fileId);
     }
 
-    public class FileRetrievalResult
+    /// <summary>
+    /// Base result type for file retrieval operations.
+    /// </summary>
+    public abstract class FileRetrievalResult
     {
-        public bool IsSuccess { get; set; }
-        public string? ErrorMessage { get; set; }
-        public Stream? FileStream { get; set; }
-        public string? ContentType { get; set; }
+        public abstract bool IsSuccess { get; }
+    }
+
+    /// <summary>
+    /// Represents a successful file retrieval result.
+    /// </summary>
+    public class FileRetrievalSuccess : FileRetrievalResult
+    {
+        public override bool IsSuccess => true;
+        public Stream FileStream { get; }
+        public string ContentType { get; }
+
+        public FileRetrievalSuccess(Stream fileStream, string contentType)
+        {
+            FileStream = fileStream ?? throw new ArgumentNullException(nameof(fileStream));
+            ContentType = contentType ?? throw new ArgumentNullException(nameof(contentType));
+        }
+    }
+
+    /// <summary>
+    /// Represents a failed file retrieval result.
+    /// </summary>
+    public class FileRetrievalFailure : FileRetrievalResult
+    {
+        public override bool IsSuccess => false;
+        public string ErrorMessage { get; }
+
+        public FileRetrievalFailure(string errorMessage)
+        {
+            ErrorMessage = errorMessage ?? throw new ArgumentNullException(nameof(errorMessage));
+        }
     }
 }

@@ -38,13 +38,12 @@ namespace ReceiptReader.Controllers
                 file.ContentType, 
                 file.Length);
 
-            if (!result.IsSuccess)
+            return result switch
             {
-                return BadRequest(result.ErrorMessage);
-            }
-
-            // Service contract guarantees Receipt is not null when IsSuccess is true
-            return Ok(ReceiptMapper.ToDto(result.Receipt!));
+                ReceiptServiceSuccess success => Ok(ReceiptMapper.ToDto(success.Receipt)),
+                ReceiptServiceFailure failure => BadRequest(failure.ErrorMessage),
+                _ => StatusCode(StatusCodes.Status500InternalServerError, "Unknown error occurred")
+            };
         }
 
         [HttpGet("{fileId}")]
@@ -54,13 +53,12 @@ namespace ReceiptReader.Controllers
         {
             var result = await _fileRetrievalService.GetFileAsync(fileId);
 
-            if (!result.IsSuccess)
+            return result switch
             {
-                return NotFound(result.ErrorMessage);
-            }
-
-            // Service contract guarantees FileStream and ContentType are not null when IsSuccess is true
-            return File(result.FileStream!, result.ContentType!);
+                FileRetrievalSuccess success => File(success.FileStream, success.ContentType),
+                FileRetrievalFailure failure => NotFound(failure.ErrorMessage),
+                _ => StatusCode(StatusCodes.Status500InternalServerError, "Unknown error occurred")
+            };
         }
     }
 }
