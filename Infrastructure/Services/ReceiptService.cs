@@ -90,9 +90,11 @@ namespace ReceiptReader.Infrastructure.Services
             }
             catch (Exception ex)
             {
-                // Attempt to clean up any database records that may have been created
-                // Note: File remains in storage intentionally for debugging/reprocessing
-                // Note: This is a safe operation - DeleteAsync does nothing if receipt doesn't exist
+                /*
+                 * Attempt to clean up any database records that may have been created.
+                 * Note: File remains in storage intentionally for debugging/reprocessing.
+                 * Note: This is a safe operation - DeleteAsync does nothing if receipt doesn't exist.
+                 */
                 try
                 {
                     await _receiptRepository.DeleteAsync(fileId);

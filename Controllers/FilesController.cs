@@ -42,7 +42,8 @@ namespace ReceiptReader.Controllers
             {
                 ReceiptServiceSuccess success => Ok(ReceiptMapper.ToDto(success.Receipt)),
                 ReceiptServiceFailure failure => BadRequest(failure.ErrorMessage),
-                _ => StatusCode(StatusCodes.Status500InternalServerError, "Unknown error occurred")
+                _ => StatusCode(StatusCodes.Status500InternalServerError, 
+                    "Unexpected result type returned from service")
             };
         }
 
@@ -57,7 +58,8 @@ namespace ReceiptReader.Controllers
             {
                 FileRetrievalSuccess success => File(success.FileStream, success.ContentType),
                 FileRetrievalFailure failure => NotFound(failure.ErrorMessage),
-                _ => StatusCode(StatusCodes.Status500InternalServerError, "Unknown error occurred")
+                _ => StatusCode(StatusCodes.Status500InternalServerError, 
+                    "Unexpected result type returned from service")
             };
         }
     }
