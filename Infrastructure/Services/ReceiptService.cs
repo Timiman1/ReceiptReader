@@ -88,7 +88,15 @@ namespace ReceiptReader.Infrastructure.Services
             {
                 // Clean up database record on failure
                 // Note: File remains in storage for potential debugging/reprocessing
-                await _receiptRepository.DeleteAsync(fileId);
+                try
+                {
+                    await _receiptRepository.DeleteAsync(fileId);
+                }
+                catch (Exception cleanupEx)
+                {
+                    _logger.LogError(cleanupEx, "Failed to clean up receipt record for fileId {FileId} after analysis failure.", fileId);
+                    // Continue with original error handling
+                }
 
                 if (ex is ReceiptAnalyzerException)
                 {
