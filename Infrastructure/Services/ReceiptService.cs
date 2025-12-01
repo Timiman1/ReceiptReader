@@ -78,6 +78,16 @@ namespace ReceiptReader.Infrastructure.Services
                 using var ocrStream = await _fileStorage.OpenReadAsync(fileId);
                 var analysisResult = await _receiptAnalyzer.AnalyzeAsync(ocrStream, fileId);
                 
+                if (analysisResult?.Receipt == null)
+                {
+                    _logger.LogError("Analysis completed but no receipt was returned for fileId {FileId}", fileId);
+                    return new ReceiptServiceResult
+                    {
+                        IsSuccess = false,
+                        ErrorMessage = "Analysis completed but no receipt data was extracted."
+                    };
+                }
+                
                 return new ReceiptServiceResult
                 {
                     IsSuccess = true,

@@ -1,3 +1,5 @@
+using ReceiptReader.Domain;
+
 namespace ReceiptReader.Application.Services
 {
     /// <summary>
@@ -16,6 +18,6 @@ namespace ReceiptReader.Application.Services
     {
         public bool IsSuccess { get; set; }
         public string? ErrorMessage { get; set; }
-        public Domain.ReceiptInfo? Receipt { get; set; }
+        public ReceiptInfo? Receipt { get; set; }
     }
 }
