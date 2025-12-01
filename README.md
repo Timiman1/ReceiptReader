@@ -26,7 +26,7 @@ It uses advanced OCR services to parse raw text and maps it to a structured doma
 
 | Category | Technology | Purpose |
 | :--- | :--- | :--- |
-| **Backend** | **ASP.NET Core 8+** | Core API framework for building RESTful services. |
+| **Backend** | **ASP.NET Core 10+** | Core API framework for building RESTful services. |
 | **Language** | **C#** | Primary programming language. |
 | **Database** | **SQLite** (Development) | Lightweight, file-based database used for local development and testing. |
 | **ORM** | **Entity Framework Core** | Data access, migration management, and database interaction. |
