@@ -1,7 +1,8 @@
 using ReceiptReader.Application.FileStorage;
+using ReceiptReader.Application.Services;
 using ReceiptReader.Application.Utility;
 
-namespace ReceiptReader.Application.Services
+namespace ReceiptReader.Infrastructure.Services
 {
     /// <summary>
     /// Implementation of file retrieval service.

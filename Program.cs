@@ -9,6 +9,7 @@ using ReceiptReader.Infrastructure.Analyzers;
 using ReceiptReader.Infrastructure.Data;
 using ReceiptReader.Infrastructure.FileStorage;
 using ReceiptReader.Infrastructure.Repositories;
+using ReceiptReader.Infrastructure.Services;
 using ReceiptReader.Infrastructure.Configurations;
 using ReceiptReader.Infrastructure.Utility;
 using ReceiptReader.Infrastructure.Validation;

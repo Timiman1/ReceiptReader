@@ -2,13 +2,14 @@ using ReceiptReader.Application.Analyzers;
 using ReceiptReader.Application.Exceptions;
 using ReceiptReader.Application.FileStorage;
 using ReceiptReader.Application.Repositories;
+using ReceiptReader.Application.Services;
 using ReceiptReader.Application.Utility;
 using ReceiptReader.Application.Validation;
 using ReceiptReader.Infrastructure.Configurations;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace ReceiptReader.Application.Services
+namespace ReceiptReader.Infrastructure.Services
 {
     /// <summary>
     /// Implementation of receipt processing service.
@@ -85,7 +86,8 @@ namespace ReceiptReader.Application.Services
             }
             catch (Exception ex)
             {
-                // Clean up file on failure
+                // Clean up database record on failure
+                // Note: File remains in storage for potential debugging/reprocessing
                 await _receiptRepository.DeleteAsync(fileId);
 
                 if (ex is ReceiptAnalyzerException)
