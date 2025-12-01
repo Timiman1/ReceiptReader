@@ -43,12 +43,8 @@ namespace ReceiptReader.Controllers
                 return BadRequest(result.ErrorMessage);
             }
 
-            if (result.Receipt == null)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Receipt processing succeeded but no receipt data was returned.");
-            }
-
-            return Ok(ReceiptMapper.ToDto(result.Receipt));
+            // Service contract guarantees Receipt is not null when IsSuccess is true
+            return Ok(ReceiptMapper.ToDto(result.Receipt!));
         }
 
         [HttpGet("{fileId}")]
@@ -63,12 +59,8 @@ namespace ReceiptReader.Controllers
                 return NotFound(result.ErrorMessage);
             }
 
-            if (result.FileStream == null || result.ContentType == null)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "File retrieval succeeded but required data was not returned.");
-            }
-
-            return File(result.FileStream, result.ContentType);
+            // Service contract guarantees FileStream and ContentType are not null when IsSuccess is true
+            return File(result.FileStream!, result.ContentType!);
         }
     }
 }
