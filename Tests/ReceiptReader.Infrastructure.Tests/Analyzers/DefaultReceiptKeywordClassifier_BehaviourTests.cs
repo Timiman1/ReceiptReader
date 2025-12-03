@@ -1,8 +1,7 @@
 ﻿using Moq;
-using ReceiptReader.Infrastructure.Analyzers;
 using Xunit;
 
-namespace ReceiptReader.Tests.ReceiptReader.Infrastructure.Tests.Analyzers
+namespace ReceiptReader.Infrastructure.Tests.Analyzers;
 {
     public class DefaultReceiptKeywordClassifier_BehaviourTests
     {
