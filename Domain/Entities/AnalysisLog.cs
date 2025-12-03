@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ReceiptReader.Domain
+namespace ReceiptReader.Domain.Entities
 {
     public enum AnalysisStatus
     {

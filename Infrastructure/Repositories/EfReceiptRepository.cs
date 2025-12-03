@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ReceiptReader.Application.Repositories;
-using ReceiptReader.Domain;
+using ReceiptReader.Domain.Entities;
 using ReceiptReader.Infrastructure.Data;
 
 namespace ReceiptReader.Infrastructure.Repositories

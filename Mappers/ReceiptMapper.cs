@@ -1,5 +1,5 @@
 ﻿using ReceiptReader.Dtos;
-using ReceiptReader.Domain;
+using ReceiptReader.Domain.Entities;
 
 namespace ReceiptReader.Mappers
 {

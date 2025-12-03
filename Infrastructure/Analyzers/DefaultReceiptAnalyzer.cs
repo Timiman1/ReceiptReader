@@ -4,7 +4,7 @@ using ReceiptReader.Application.RawTextExtractors;
 using ReceiptReader.Application.ReceiptDataExtractors;
 using ReceiptReader.Application.Repositories;
 using ReceiptReader.Application.Utility;
-using ReceiptReader.Domain;
+using ReceiptReader.Domain.Entities;
 
 namespace ReceiptReader.Infrastructure.Analyzers
 {

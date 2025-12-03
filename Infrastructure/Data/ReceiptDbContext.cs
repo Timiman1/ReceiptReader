@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ReceiptReader.Domain;
+using ReceiptReader.Domain.Entities;
 
 namespace ReceiptReader.Infrastructure.Data
 {

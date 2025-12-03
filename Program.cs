@@ -15,6 +15,7 @@ using ReceiptReader.Application.RawTextExtractors;
 using ReceiptReader.Infrastructure.RawTextExtractors;
 using ReceiptReader.Application.ReceiptDataExtractors;
 using ReceiptReader.Infrastructure.ReceiptDataExtractors;
+using ReceiptReader.Application.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,6 +38,9 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// Receipt Proccessing Service
+builder.Services.AddScoped<IReceiptProcessingService, DefaultReceiptProcessingService>();
 
 // File Validator
 builder.Services.AddSingleton<IFileValidator, FileValidator>();

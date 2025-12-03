@@ -1,5 +1,5 @@
 ﻿using ReceiptReader.Application.ReceiptDataExtractors;
-using ReceiptReader.Domain;
+using ReceiptReader.Domain.Entities;
 
 namespace ReceiptReader.Application.Analyzers
 {

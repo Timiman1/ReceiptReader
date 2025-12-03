@@ -1,6 +1,7 @@
 ﻿using ReceiptReader.Application.Analyzers;
 using ReceiptReader.Application.ReceiptDataExtractors;
 using ReceiptReader.Domain;
+using ReceiptReader.Domain.Entities;
 
 namespace ReceiptReader.Infrastructure.Analyzers
 {

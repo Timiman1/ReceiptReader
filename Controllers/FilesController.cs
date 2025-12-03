@@ -1,14 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ReceiptReader.Application.FileStorage;
-using ReceiptReader.Application.Repositories;
 using ReceiptReader.Application.Utility;
-using ReceiptReader.Application.Validation;
-using ReceiptReader.Application.Analyzers;
 using ReceiptReader.Dtos;
-using ReceiptReader.Mappers;
-using ReceiptReader.Infrastructure.Configurations;
-using Microsoft.Extensions.Options;
-using ReceiptReader.Application.Exceptions;
+using ReceiptReader.Application.Services;
+using ReceiptReader.Application.Commands;
+using ReceiptReader.Domain.Shared;
 
 namespace ReceiptReader.Controllers
 {
@@ -18,28 +14,19 @@ namespace ReceiptReader.Controllers
     {
         private readonly ILogger<FilesController> _logger;
         private readonly IFileStorage _fileStorage;
-        private readonly IReceiptAnalyzer _receiptAnalyzer;
-        private readonly IReceiptRepository _receiptRepository;
-        private readonly IFileValidator _fileValidator;
         private readonly IContentTypeResolver _contentTypeResolver;
-        private readonly FileSettings _fileSettings;
+        private readonly IReceiptProcessingService _receiptProcessingService;
 
         public FilesController(
             ILogger<FilesController> logger,
             IFileStorage fileStorage,
-            IReceiptAnalyzer receiptAnalyzer,
-            IReceiptRepository receiptRepository,
-            IFileValidator fileValidator,
             IContentTypeResolver contentTypeResolver,
-            IOptions<FileSettings> fileSettings)
+            IReceiptProcessingService receiptProcessingService)
         {
             _logger = logger;
             _fileStorage = fileStorage;
-            _receiptAnalyzer = receiptAnalyzer;
-            _receiptRepository = receiptRepository;
-            _fileValidator = fileValidator;
             _contentTypeResolver = contentTypeResolver;
-            _fileSettings = fileSettings.Value;
+            _receiptProcessingService = receiptProcessingService;
         }
 
         [HttpPost("upload")]
@@ -48,48 +35,29 @@ namespace ReceiptReader.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<ReceiptDto>> UploadAsync(IFormFile file)
         {
-            var maxFileSize = _fileSettings.MaxFileSizeInBytes;
-
             if (file == null || file.Length == 0)
             {
                 return BadRequest("No file uploaded.");
             }
-            if (file.Length > maxFileSize)
-            {
-                return BadRequest($"File size exceeds the limit of {maxFileSize / 1024 / 1024} MB.");
-            }
-            if (!_fileValidator.HasAllowedExtension(file.FileName) ||
-                !_fileValidator.IsAllowedMimeType(file.ContentType))
-            {
-                return BadRequest("Unsupported file format or content type.");
-            }
 
-            var fileId = Guid.NewGuid();
-            using var stream = file.OpenReadStream();
-            await _fileStorage.SaveAsync(
-                stream,
-                file.FileName,
-                file.ContentType,
-                fileId
+            var stream = file.OpenReadStream();
+            var result = await _receiptProcessingService.ProcessReceiptAsync(
+                new ProcessReceiptCommand(stream, file.FileName, file.ContentType, file.Length)
             );
 
-            using var ocrStream = await _fileStorage.OpenReadAsync(fileId);
-            try
+            if (result.IsSuccess)
             {
-                var analysisResult = await _receiptAnalyzer.AnalyzeAsync(ocrStream, fileId);
-                return Ok(ReceiptMapper.ToDto(analysisResult.Receipt!));
+                return result.Value;
             }
-            catch (Exception ex)
+            else
             {
-                await _receiptRepository.DeleteAsync(fileId);
-
-                if (ex is ReceiptAnalyzerException)
+                var error = result.FailureType switch
                 {
-                    return BadRequest($"File content rejected: {ex.Message}");
-                }
+                    FailureType.ValidationError => BadRequest(result.ErrorMessage),
+                    _ => StatusCode(StatusCodes.Status500InternalServerError, "An unexpected error occurred.")
+                };
 
-                _logger.LogError(ex, "An unexpected error occurred during receipt processing.");
-                return StatusCode(StatusCodes.Status500InternalServerError, "An unexpected error occurred.");
+                return error;
             }
         }
 
