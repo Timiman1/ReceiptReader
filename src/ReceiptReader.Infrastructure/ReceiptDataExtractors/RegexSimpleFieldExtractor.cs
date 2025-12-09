@@ -119,7 +119,7 @@ namespace ReceiptReader.Infrastructure.ReceiptDataExtractors
 
         private ParsedField<decimal?> ParseTotalAmount(string rawText)
         {
-            var match = Regex.Match(rawText, @"\b(?:Total|Totalt|Summa|Kortköp|Totalt SEK|Köp|SEK)\s*[:\-]?\s*(\d+[.,]\s?\d{2})\b", RegexOptions.IgnoreCase);
+            var match = Regex.Match(rawText, @"\b(?:Total|Totalt|Summa|Kortköp|Totalt SEK|Köp|SEK|Att betala)\s*(?:\(.*\))?[:\-]?\s*(\d+[.,]\s?\d{2})\b", RegexOptions.IgnoreCase);
             if (match.Success == false)
             {
                 return new ParsedField<decimal?> { Value = null, Confidence = 0.0, SourceText = null };
