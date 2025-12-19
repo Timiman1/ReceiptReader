@@ -20,6 +20,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReceiptReader.Infrastructur
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReceiptReader.Infrastructure.Tests", "tests\ReceiptReader.Infrastructure.Tests\ReceiptReader.Infrastructure.Tests.csproj", "{EE45F3DC-AA24-E40F-2D06-5684389E33A0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReceiptReader.Domain.Tests", "tests\ReceiptReader.Domain.Tests\ReceiptReader.Domain.Tests.csproj", "{51BF8E43-2922-4AAF-BA5F-5959FE38E886}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -46,6 +48,10 @@ Global
 		{EE45F3DC-AA24-E40F-2D06-5684389E33A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EE45F3DC-AA24-E40F-2D06-5684389E33A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EE45F3DC-AA24-E40F-2D06-5684389E33A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{51BF8E43-2922-4AAF-BA5F-5959FE38E886}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51BF8E43-2922-4AAF-BA5F-5959FE38E886}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51BF8E43-2922-4AAF-BA5F-5959FE38E886}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51BF8E43-2922-4AAF-BA5F-5959FE38E886}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -56,6 +62,7 @@ Global
 		{E6D020D4-23AF-70EA-4EC3-A3FFCFA2E37F} = {49231916-4E57-4A8F-B172-313B0E2BAC7D}
 		{C6B1547F-8E9A-DEB0-27A3-8386BB7220F1} = {49231916-4E57-4A8F-B172-313B0E2BAC7D}
 		{EE45F3DC-AA24-E40F-2D06-5684389E33A0} = {2B629A27-4D1F-4D72-ABBE-22AAE16206D8}
+		{51BF8E43-2922-4AAF-BA5F-5959FE38E886} = {2B629A27-4D1F-4D72-ABBE-22AAE16206D8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FF269C35-494C-4B33-B6F2-ABE5FC8A10D0}
