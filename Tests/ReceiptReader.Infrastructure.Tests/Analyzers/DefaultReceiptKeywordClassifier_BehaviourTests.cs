@@ -1,7 +1,9 @@
-﻿using Moq;
+﻿using Microsoft.Extensions.Logging;
+using Moq;
+using ReceiptReader.Infrastructure.Analyzers;
 using Xunit;
 
-namespace ReceiptReader.Infrastructure.Tests.Analyzers;
+namespace ReceiptReader.Infrastructure.Tests.Analyzers
 {
     public class DefaultReceiptKeywordClassifier_BehaviourTests
     {
