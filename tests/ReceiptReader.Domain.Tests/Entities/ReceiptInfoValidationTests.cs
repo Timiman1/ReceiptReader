@@ -19,7 +19,7 @@ namespace ReceiptReader.Domain.Tests.Entities
         [InlineData(null, 10.0, "Någon butik", "$", "Transaction date is missing.")]
         [InlineData("2049-12-31", 0, "ICA Ankeborg", "USD", "Total amount must be greater than zero.")]
         [InlineData("2006-01-01", 10.0, "", "SEK", "Vendor name is required.")]
-        [InlineData("2150-01-01", 10.0, "", "SEK", "Vendor name is required.")]
+        [InlineData("2150-01-01", 10.0, "Byggmax Östersund", "", "Currency code is required.")]
         public void GetValidationErrors_ShouldReturnSpecificErrorMessage(
             string? dateStr, 
             decimal amount, 
