@@ -15,4 +15,8 @@
     <PackageReference Include="xunit.v3" Version="3.2.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\ReceiptReader.Domain\ReceiptReader.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
