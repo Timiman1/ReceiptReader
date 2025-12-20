@@ -80,5 +80,54 @@ namespace ReceiptReader.Domain.Tests.Entities
             // Assert
             Assert.Contains("Transaction date is too far in the past.", errors);
         }
+
+        [Fact]
+        public void TotalAmount_ShouldNotFailSumCheck_WhenLineItemsAreEmpty()
+        {
+            // Arrange
+            var receipt = new ReceiptInfo { TotalAmount = 50.00M };
+
+            // Act
+            var errors = receipt.GetValidationErrors();
+
+            // Assert
+            Assert.DoesNotContain(errors, e => e.Contains("sum of line items"));
+        }
+
+        [Fact]
+        public void TotalAmount_ShouldFailSumCheck_WhenLineItemsDoNotMatchTotal()
+        {
+            // Arrange
+            var receipt = new ReceiptInfo { TotalAmount = 100.00m };
+            receipt.LineItems.Add(new ReceiptLineItem { Quantity = 1, UnitPrice = 40.00m });
+
+            // Act
+            var errors = receipt.GetValidationErrors();
+
+            // Assert
+            Assert.Contains(errors, e => e.ToLower().Contains("sum of line items"));
+        }
+
+        [Fact]
+        public void IsReadyForPosting_ShouldBeTrue_WhenReceiptIsPerfectlyValid()
+        {
+            // Arrange
+            var receipt = new ReceiptInfo
+            {
+                VendorName = "IKEA Kållered",
+                TotalAmount = 499.00m,
+                Currency = "SEK",
+                TransactionDate = DateTime.UtcNow.AddDays(-1)
+            };
+            receipt.LineItems.Add(new ReceiptLineItem { Quantity = 1, UnitPrice = 499.00m });
+
+            // Act
+            var errors = receipt.GetValidationErrors();
+            var isValid = receipt.IsReadyForPosting;
+
+            // Assert
+            Assert.Empty(errors);
+            Assert.True(isValid);
+        }
     }
 }
