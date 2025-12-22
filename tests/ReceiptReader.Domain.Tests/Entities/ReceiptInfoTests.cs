@@ -34,9 +34,9 @@ namespace ReceiptReader.Domain.Tests.Entities
         [InlineData("Lidl Falkenberg", 186.90, "€", 57.69, "Lorem ipsum")]
         public void Properties_ShouldStoreAndRetrieveValuesCorrectly(
             string vendorName,
-            decimal totalAmount,
+            double totalAmount,
             string currency,
-            decimal? taxAmount,
+            double? taxAmount,
             string rawText)
         {
             // Arrange
@@ -47,18 +47,18 @@ namespace ReceiptReader.Domain.Tests.Entities
             // Act
             receipt.FileId = testGuid;
             receipt.VendorName = vendorName;
-            receipt.TotalAmount = totalAmount;
+            receipt.TotalAmount = (decimal)totalAmount;
             receipt.Currency = currency;
-            receipt.TaxAmount = taxAmount;
+            receipt.TaxAmount = (decimal?)taxAmount;
             receipt.RawText = rawText;
             receipt.TransactionDate = testDate;
 
             // Assert
             Assert.Equal(testGuid, receipt.FileId);
             Assert.Equal(vendorName, receipt.VendorName);
-            Assert.Equal(totalAmount, receipt.TotalAmount);
+            Assert.Equal((decimal)totalAmount, receipt.TotalAmount);
             Assert.Equal(currency, receipt.Currency);
-            Assert.Equal(taxAmount, receipt.TaxAmount);
+            Assert.Equal((decimal?)taxAmount, receipt.TaxAmount);
             Assert.Equal(rawText, receipt.RawText);
             Assert.Equal(testDate, receipt.TransactionDate);
         }
