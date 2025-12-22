@@ -5,6 +5,15 @@
 [![GitHub last commit](https://img.shields.io/github/last-commit/Timiman1/ReceiptReader)](https://github.com/Timiman1/ReceiptReader/commits/main)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.md)
 
+### 🛠️ Current Focus: Domain Integrity & Testing
+I am currently prioritizing the Domain Layer to ensure a rock-solid foundation for financial data.
+
+Pace: ~5 hours/week.
+
+Active Goal: 100% coverage of core domain logic, including exceptions and the Result Pattern implementation for predictable error handling and functional flow.
+
+Next Milestone: Transitioning to the Application Layer (Use Cases & DTOs) once domain logic tests are complete.
+
 ---
 
 ## 💡 Overview
