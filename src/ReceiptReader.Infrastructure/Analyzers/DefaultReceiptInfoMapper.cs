@@ -29,7 +29,6 @@ namespace ReceiptReader.Infrastructure.Analyzers
                         Name = dto.Name,
                         Quantity = dto.Quantity,
                         UnitPrice = dto.UnitPrice,
-                        TotalLineAmount = dto.TotalLineAmount,
                         ProductCode = dto.ProductCode
                     }).ToList(),
 

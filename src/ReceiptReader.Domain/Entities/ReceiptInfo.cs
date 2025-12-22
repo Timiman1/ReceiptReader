@@ -48,6 +48,14 @@ namespace ReceiptReader.Domain.Entities
                     yield return "Transaction date is too far in the past.";
             }
 
+            if (LineItems.Any())
+            {
+                var calculatedSum = LineItems.Sum(li => li.TotalLineAmount);
+                if (Math.Abs(TotalAmount - calculatedSum) > 0.01m)
+                {
+                    yield return $"Total amount ({TotalAmount}) does not match the sum of line items ({calculatedSum}).";
+                }
+            }
         }
     }
 }
