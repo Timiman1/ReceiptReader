@@ -13,6 +13,11 @@ namespace ReceiptReader.Domain.Entities
         public string Currency { get; set; } = string.Empty;
         public decimal? TaxAmount { get; set; } = null;
 
+        /// <summary>
+        /// The full text extracted by the OCR engine(s). 
+        /// Integrity and extraction confidence are verified by IExtractionGatekeeper 
+        /// before this entity is populated.
+        /// </summary>
         public string RawText { get; set; } = string.Empty;
 
         public ICollection<ReceiptLineItem> LineItems { get; set; } = new List<ReceiptLineItem>();
