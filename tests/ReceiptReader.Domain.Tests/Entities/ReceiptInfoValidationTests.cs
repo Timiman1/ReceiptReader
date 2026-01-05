@@ -12,7 +12,7 @@ namespace ReceiptReader.Domain.Tests.Entities
             var receipt = new ReceiptInfo();
 
             // Assert
-            Assert.False(receipt.IsReadyForPosting);
+            Assert.False(receipt.IsValid);
         }
 
         [Theory]
@@ -123,7 +123,7 @@ namespace ReceiptReader.Domain.Tests.Entities
 
             // Act
             var errors = receipt.GetValidationErrors();
-            var isValid = receipt.IsReadyForPosting;
+            var isValid = receipt.IsValid;
 
             // Assert
             Assert.Empty(errors);

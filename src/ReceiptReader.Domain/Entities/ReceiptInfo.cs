@@ -23,7 +23,7 @@ namespace ReceiptReader.Domain.Entities
         public ICollection<ReceiptLineItem> LineItems { get; set; } = new List<ReceiptLineItem>();
         public ICollection<ReceiptTaxLine> TaxLines { get; set; } = new List<ReceiptTaxLine>();
 
-        public bool IsReadyForPosting => !GetValidationErrors().Any();
+        public bool IsValid => !GetValidationErrors().Any();
 
         public IEnumerable<string> GetValidationErrors()
         {
