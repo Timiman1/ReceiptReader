@@ -98,10 +98,11 @@ namespace ReceiptReader.Infrastructure.Analyzers
                 var completedLogEntry = new AnalysisLog
                 {
                     FileHash = fileHash,
-                    Status = AnalysisStatus.Completed,
-                    AnalysisDate = DateTime.UtcNow,
-                    ReceiptInfoId = receipt.FileId
+                    AnalysisDate = DateTime.UtcNow
                 };
+
+                completedLogEntry.LinkToReceipt(receipt.FileId);
+                completedLogEntry.MarkCompleted();
 
                 await _analysisLogRepository.AddLogAsync(completedLogEntry);
 
@@ -137,10 +138,9 @@ namespace ReceiptReader.Infrastructure.Analyzers
             var logEntry = new AnalysisLog
             {
                 FileHash = fileHash,
-                Status = status,
-                FailureReason = reason,
-                AnalysisDate = DateTime.UtcNow
             };
+            logEntry.MarkFailed(status, reason);
+
             await _analysisLogRepository.AddLogAsync(logEntry);
 
             throw new ReceiptAnalyzerException(reason);

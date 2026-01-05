@@ -10,7 +10,7 @@ namespace ReceiptReader.Domain.Tests.Entities
         [InlineData("", "File hash is required.")]
         [InlineData("   ", "File hash is required.")]
         [InlineData("abc", "File hash must be a valid SHA256 hash.")]
-        public void GetValidationErrors_ShouldReturnSpecificErrorMessage(
+        public void GetValidationErrors_ShouldReturnFileHashError_WhenFileHashIsInvalid(
         string? fileHash,
         string expectedError)
         {
@@ -18,7 +18,6 @@ namespace ReceiptReader.Domain.Tests.Entities
             var log = new AnalysisLog
             {
                 FileHash = fileHash ?? string.Empty,
-                ReceiptInfoId = Guid.NewGuid()
             };
 
             // Act
@@ -30,17 +29,12 @@ namespace ReceiptReader.Domain.Tests.Entities
 
         [Theory]
         [InlineData(null, "Analysis log must be linked to a receipt.")]
-        [InlineData("00000000-0000-0000-0000-000000000000", "Analysis log must be linked to a receipt.")]
         public void GetValidationErrors_ShouldReturnReceiptError_WhenReceiptIsMissing(
             string? receiptId,
             string expectedError)
         {
             // Assert
-            var log = new AnalysisLog
-            {
-                FileHash = new string('a', 64),
-                ReceiptInfoId = receiptId == null ? null : Guid.Parse(receiptId)
-            };
+            var log = new AnalysisLog { FileHash = new string('a', 64) };
 
             // Act
             var errors = log.GetValidationErrors();
@@ -66,13 +60,8 @@ namespace ReceiptReader.Domain.Tests.Entities
         public void MarkCompleted_ShouldSetStatusToCompleted_WhenLogIsPerfectlyValid()
         {
             // Arrange
-            var log = new AnalysisLog
-            {
-                FileHash = new string('a', 64),
-                ReceiptInfoId = Guid.NewGuid(),
-                Status = AnalysisStatus.Pending,
-                FailureReason = "Old error"
-            };
+            var log = new AnalysisLog { FileHash = new string('a', 64) };
+            log.LinkToReceipt(Guid.NewGuid());
 
             // Act
             log.MarkCompleted();
@@ -86,17 +75,25 @@ namespace ReceiptReader.Domain.Tests.Entities
         public void IsValid_ShouldBeTrue_WhenLogIsPerfectlyValid()
         {
             // Arrange
-            var log = new AnalysisLog
-            {
-                FileHash = new string('a', 64),
-                ReceiptInfoId = Guid.NewGuid()
-            };
+            var log = new AnalysisLog { FileHash = new string('a', 64) };
+            log.LinkToReceipt(Guid.NewGuid());
 
             // Act
             var isValid = log.IsValid;
 
             // Assert
             Assert.True(isValid);
+        }
+
+        [Fact]
+        public void LinkToReceipt_ShouldThrowException_WhenReceiptInfoIdIsEmpty()
+        {
+            // Arrange
+            var log = new AnalysisLog();
+
+            // Act & Assert
+            var ex = Assert.Throws<ArgumentException>(() => log.LinkToReceipt(Guid.Empty));
+            Assert.Contains("Receipt info ID cannot be empty.", ex.Message);
         }
     }
 }

@@ -12,7 +12,7 @@ namespace ReceiptReader.Domain.Tests.Entities
             var receipt = new ReceiptInfo();
 
             // Assert
-            Assert.Equal(Guid.Empty, receipt.FileId);
+            Assert.NotEqual(Guid.Empty, receipt.FileId);
 
             Assert.NotNull(receipt.LineItems);
             Assert.NotNull(receipt.TaxLines);
