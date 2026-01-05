@@ -5,7 +5,7 @@ namespace ReceiptReader.Domain.Entities
     public class ReceiptInfo
     {
         [Key]
-        public Guid FileId { get; set; }
+        public Guid FileId { get; set; } = Guid.NewGuid();
 
         public string VendorName { get; set; } = string.Empty;
         public decimal TotalAmount { get; set; }
