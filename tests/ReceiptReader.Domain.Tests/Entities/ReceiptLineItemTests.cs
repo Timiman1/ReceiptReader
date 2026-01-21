@@ -12,10 +12,9 @@ namespace ReceiptReader.Domain.Tests.Entities
             var receipt = new ReceiptInfo { FileId = Guid.NewGuid() };
             var item = new ReceiptLineItem
             {
-                Name = "Hönökaka",
-                ReceiptInfo = receipt,
-                ReceiptInfoId = receipt.FileId
+                Name = "Hönökaka"
             };
+            item.LinkToReceipt(receipt.FileId);
 
             // Act
             receipt.LineItems.Add(item);
@@ -23,28 +22,6 @@ namespace ReceiptReader.Domain.Tests.Entities
             // Assert
             var addedItem = receipt.LineItems.First();
             Assert.Equal(receipt.FileId, addedItem.ReceiptInfoId);
-            Assert.Same(receipt, addedItem.ReceiptInfo);
-        }
-
-        [Fact]
-        public void ReceiptInfoId_ShouldNotAutoPopulate_WhenReferenceIsSet()
-        {
-            // Arrange
-            var manualId = Guid.NewGuid();
-            var receipt = new ReceiptInfo { FileId = manualId };
-            var item = new ReceiptLineItem
-            {
-                Name = "Keso",
-                ReceiptInfo = receipt,
-            };
-
-            // Act
-            receipt.LineItems.Add(item);
-
-            // Assert
-            var addedItem = receipt.LineItems.First();
-            Assert.NotEqual(receipt.FileId, addedItem.ReceiptInfoId);
-            Assert.Equal(Guid.Empty, addedItem.ReceiptInfoId);
         }
 
         [Fact]
@@ -54,7 +31,7 @@ namespace ReceiptReader.Domain.Tests.Entities
             var item = new ReceiptLineItem();
 
             // Assert
-            Assert.Equal(Guid.Empty, item.Id);
+            Assert.NotEqual(Guid.Empty, item.Id);
 
             Assert.Empty(item.Name);
             Assert.Equal(1m, item.Quantity);

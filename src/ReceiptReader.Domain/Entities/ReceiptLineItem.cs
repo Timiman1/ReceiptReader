@@ -5,13 +5,20 @@ namespace ReceiptReader.Domain.Entities
     public class ReceiptLineItem
     {
         [Key]
-        public Guid Id {  get; set; }
+        public Guid Id {  get; init; } = Guid.NewGuid();
 
-        public string Name { get; set; } = string.Empty;
-        public decimal Quantity { get; set; } = 1;
-        public decimal UnitPrice { get; set; }
+        public string Name { get; init; } = string.Empty;
+        public decimal Quantity { get; init; } = 1;
+        public decimal UnitPrice { get; init; }
         public decimal TotalLineAmount => Math.Round(Quantity * UnitPrice, 2, MidpointRounding.AwayFromZero);
-        public string? ProductCode { get; set; }
+        public string? ProductCode { get; init; }
+
+        // EF Core can still populate these even if the setter is private
+        public Guid? ReceiptInfoId { get; private set; }
+        public ReceiptInfo? ReceiptInfo { get; private set; }
+
+        public bool IsDiscount => UnitPrice < 0;
+
         public bool IsValid => !GetValidationErrors().Any();
 
         public IEnumerable<string> GetValidationErrors()

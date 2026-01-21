@@ -69,7 +69,7 @@ namespace ReceiptReader.Infrastructure.Repositories
                 existingReceipt.LineItems.Clear();
                 foreach (var item in receipt.LineItems)
                 {
-                    item.ReceiptInfo = existingReceipt;
+                    item.LinkToReceipt(existingReceipt.FileId);
                     existingReceipt.LineItems.Add(item);
                 }
 
