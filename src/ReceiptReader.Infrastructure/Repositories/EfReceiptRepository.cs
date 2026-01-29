@@ -76,7 +76,7 @@ namespace ReceiptReader.Infrastructure.Repositories
                 existingReceipt.TaxLines.Clear();
                 foreach (var taxLine in receipt.TaxLines)
                 {
-                    taxLine.ReceiptInfo = existingReceipt;
+                    taxLine.LinkToReceipt(existingReceipt.FileId);
                     existingReceipt.TaxLines.Add(taxLine);
                 }
             }
