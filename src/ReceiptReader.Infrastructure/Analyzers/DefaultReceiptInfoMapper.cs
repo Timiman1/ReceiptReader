@@ -36,7 +36,8 @@ namespace ReceiptReader.Infrastructure.Analyzers
                     .Select(dto => new ReceiptTaxLine
                     {
                         TaxAmount = dto.TaxAmount,
-                        TaxableAmount = dto.TaxableAmount,
+                        GrossAmount = dto.GrossAmount,
+                        NetAmount = dto.NetAmount,
                         Percentage = dto.Percentage
                     }).ToList()
             };

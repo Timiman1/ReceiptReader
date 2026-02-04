@@ -61,7 +61,8 @@ namespace ReceiptReader.Application.Mappers
                 result.Add(new ReceiptTaxLineDto
                 {
                     TaxAmount = taxLine.TaxAmount,
-                    TaxableAmount = taxLine.TaxableAmount,
+                    GrossAmount = taxLine.GrossAmount,
+                    NetAmount = taxLine.NetAmount,
                     Percentage = taxLine.Percentage,
                 });
             }

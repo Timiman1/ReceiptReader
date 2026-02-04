@@ -7,7 +7,8 @@
     /// </summary>
     public record TaxLineDto(
         decimal TaxAmount,
-        decimal TaxableAmount,
+        decimal GrossAmount,
+        decimal NetAmount,
         decimal Percentage
     );
 }

@@ -8,7 +8,8 @@ namespace ReceiptReader.Domain.Entities
         public Guid Id { get; init; } = Guid.NewGuid();
 
         public decimal TaxAmount { get; init; }
-        public decimal TaxableAmount { get; init; }
+        public decimal GrossAmount { get; init; }
+        public decimal NetAmount { get; init; }
         public decimal Percentage { get; init; }
 
         // EF Core can still populate these even the setter is private
