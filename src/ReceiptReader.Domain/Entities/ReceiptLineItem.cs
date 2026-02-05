@@ -1,5 +1,5 @@
 ﻿using ReceiptReader.Domain.Shared;
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace ReceiptReader.Domain.Entities
 {
@@ -12,7 +12,7 @@ namespace ReceiptReader.Domain.Entities
         public decimal Quantity { get; init; } = 1;
         public QuantityType QuantityType { get; init; }
         public decimal UnitPrice { get; init; }
-        public decimal TotalLineAmount => Math.Round(Quantity * UnitPrice, 2, MidpointRounding.AwayFromZero);
+        public decimal TotalLineAmount { get; init; }
         public string? ProductCode { get; init; }
 
         // EF Core can still populate these even if the setter is private
@@ -25,6 +25,11 @@ namespace ReceiptReader.Domain.Entities
 
         public IEnumerable<string> GetValidationErrors()
         {
+            decimal Round(decimal value)
+            {
+                return Math.Round(value, 2, MidpointRounding.AwayFromZero);
+            }
+
             if (string.IsNullOrWhiteSpace(Name))
             {
                 yield return "Name is required.";
@@ -32,6 +37,12 @@ namespace ReceiptReader.Domain.Entities
             if (Quantity == 0)
             {
                 yield return "Quantity cannot be zero.";
+            }
+
+            var calculatedTotal = UnitPrice * Quantity;
+            if (Math.Abs(TotalLineAmount - Round(UnitPrice * Quantity)) > 0.02m)
+            {
+                yield return $"Total line amount {TotalLineAmount} deviates too much from {Quantity} * {UnitPrice}.";
             }
             if (ReceiptInfoId == null || ReceiptInfoId == Guid.Empty)
             {

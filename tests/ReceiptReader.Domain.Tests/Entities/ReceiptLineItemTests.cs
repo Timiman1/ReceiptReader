@@ -41,33 +41,5 @@ namespace ReceiptReader.Domain.Tests.Entities
             Assert.Equal(0m, item.TotalLineAmount);
             Assert.Null(item.ProductCode);
         }
-
-        [Theory]
-        // Standard calculations
-        [InlineData(2, 2.50, 5.00)]
-        [InlineData(3, 10.00, 30.00)]
-        [InlineData(0.5, 100.00, 50.00)]
-        // Precision and Rounding cases
-        [InlineData(1.333, 1.333, 1.78)]
-        [InlineData(1.222, 1.222, 1.49)]
-        [InlineData(0.125, 1.0, 0.13)]
-        public void TotalLineAmount_ShouldCalculateWithTwoDecimalPrecision(
-            decimal qty,
-            decimal price,
-            decimal expectedRoundedTotal)
-        {
-            // Arrange
-            var item = new ReceiptLineItem
-            {
-                Quantity = qty,
-                UnitPrice = price
-            };
-
-            // Act
-            var actual = item.TotalLineAmount;
-
-            // Assert
-            Assert.Equal(expectedRoundedTotal, actual);
-        }
     }
 }
