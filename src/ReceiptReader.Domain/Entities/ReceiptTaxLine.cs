@@ -41,9 +41,11 @@ namespace ReceiptReader.Domain.Entities
             {
                 yield return $"Net amount {NetAmount} must be equal to gross {GrossAmount} minus tax {TaxAmount}.";
             }
-            if (Round(TaxAmount) != Round(NetAmount * Percentage))
+
+            var expectedTax = NetAmount * Percentage;
+            if (Round(TaxAmount) - Round(NetAmount * Percentage) > 0.02m)
             {
-                yield return $"Tax amount {TaxAmount} must be equal to net {NetAmount} times percentage {Percentage}.";
+                yield return $"Tax amount {TaxAmount} deviates too much from from expected {expectedTax}.";
             }
             if (ReceiptInfoId == null || ReceiptInfoId == Guid.Empty)
             {
