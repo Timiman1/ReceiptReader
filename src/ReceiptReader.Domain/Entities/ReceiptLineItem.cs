@@ -1,3 +1,4 @@
+﻿using ReceiptReader.Domain.Shared;
 ﻿using System.ComponentModel.DataAnnotations;
 
 namespace ReceiptReader.Domain.Entities
@@ -9,6 +10,7 @@ namespace ReceiptReader.Domain.Entities
 
         public string Name { get; init; } = string.Empty;
         public decimal Quantity { get; init; } = 1;
+        public QuantityType QuantityType { get; init; }
         public decimal UnitPrice { get; init; }
         public decimal TotalLineAmount => Math.Round(Quantity * UnitPrice, 2, MidpointRounding.AwayFromZero);
         public string? ProductCode { get; init; }

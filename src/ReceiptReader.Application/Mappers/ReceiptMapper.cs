@@ -39,6 +39,7 @@ namespace ReceiptReader.Application.Mappers
                 {
                     Name = lineItem.Name,
                     Quantity = lineItem.Quantity,
+                    QuantityType = lineItem.QuantityType,
                     UnitPrice = lineItem.UnitPrice,
                     TotalLineAmount = lineItem.TotalLineAmount,
                     ProductCode = lineItem.ProductCode

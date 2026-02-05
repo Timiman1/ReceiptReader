@@ -1,4 +1,5 @@
 ﻿using ReceiptReader.Domain.Entities;
+using ReceiptReader.Domain.Shared;
 using Xunit;
 
 namespace ReceiptReader.Domain.Tests.Entities
@@ -35,6 +36,7 @@ namespace ReceiptReader.Domain.Tests.Entities
 
             Assert.Empty(item.Name);
             Assert.Equal(1m, item.Quantity);
+            Assert.Equal(QuantityType.Piece, item.QuantityType);
             Assert.Equal(0m, item.UnitPrice);
             Assert.Equal(0m, item.TotalLineAmount);
             Assert.Null(item.ProductCode);

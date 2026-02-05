@@ -1,4 +1,6 @@
-﻿namespace ReceiptReader.Application.ReceiptDataExtractors
+﻿using ReceiptReader.Domain.Shared;
+
+namespace ReceiptReader.Application.ReceiptDataExtractors
 {
     /// <summary>
     /// This DTO is basically a smart copy of the <see cref="Domain.Entities.ReceiptLineItem"/> domain model.
@@ -8,6 +10,7 @@
     public record LineItemDto(
         string Name,
         decimal Quantity,
+        QuantityType QuantityType,
         decimal UnitPrice,
         decimal TotalLineAmount,
         string? ProductCode
