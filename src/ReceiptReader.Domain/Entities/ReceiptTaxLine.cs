@@ -27,7 +27,7 @@ namespace ReceiptReader.Domain.Entities
 
             if (Percentage < 0.0m || Percentage > 1.0m)
             {
-                yield return "Tax percentage must be assigned as a factor (e.g. 0.25).";
+                yield return "Tax percentage must be between 0 and 1 (e.g., 0.25 for 25%).";
             }
             if (Math.Abs(TaxAmount) > Math.Abs(GrossAmount))
             {
@@ -42,10 +42,10 @@ namespace ReceiptReader.Domain.Entities
                 yield return $"Net amount {NetAmount} must be equal to gross {GrossAmount} minus tax {TaxAmount}.";
             }
 
-            var expectedTax = NetAmount * Percentage;
-            if (Round(TaxAmount) - Round(NetAmount * Percentage) > 0.02m)
+            var expectedTax = GrossAmount * Percentage;
+            if (Round(TaxAmount) - Round(GrossAmount * Percentage) > 0.02m)
             {
-                yield return $"Tax amount {TaxAmount} deviates too much from from expected {expectedTax}.";
+                yield return $"Tax amount {TaxAmount} deviates too much from expected {expectedTax}.";
             }
             if (ReceiptInfoId == null || ReceiptInfoId == Guid.Empty)
             {

@@ -50,7 +50,7 @@ namespace ReceiptReader.Domain.Entities
 
             if (LineItems.Any())
             {
-                var calculatedSum = LineItems.Sum(li => li.TotalLineAmount);
+                var calculatedSum = LineItems.Sum(li => li.UnitPrice);
                 if (Math.Abs(TotalAmount - calculatedSum) > 0.01m)
                 {
                     yield return $"Total amount ({TotalAmount}) does not match the sum of line items ({calculatedSum}).";
