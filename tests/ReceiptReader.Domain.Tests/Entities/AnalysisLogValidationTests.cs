@@ -28,9 +28,8 @@ namespace ReceiptReader.Domain.Tests.Entities
         }
 
         [Theory]
-        [InlineData(null, "Analysis log must be linked to a receipt.")]
+        [InlineData("Analysis log must be linked to a receipt.")]
         public void GetValidationErrors_ShouldReturnReceiptError_WhenReceiptIsMissing(
-            string? receiptId,
             string expectedError)
         {
             // Assert
