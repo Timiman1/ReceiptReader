@@ -80,9 +80,12 @@ builder.Services.AddScoped<IReceiptRepository, EfReceiptRepository>();
 builder.Services.AddScoped<IAnalysisLogRepository, EfAnalysisLogRepository>();
 
 // DB Context
-var connectionString = builder.Configuration.GetConnectionString("ReceiptDatabase");
+var connectionString =
+    builder.Configuration.GetConnectionString("ReceiptDatabase")
+    ?? throw new InvalidOperationException(
+        "Connection string 'ReceiptDatabase' is not configured.");
 
-var relativePath = connectionString!.Replace("Data Source=", "").Trim();
+var relativePath = connectionString.Replace("Data Source=", "").Trim();
 
 var dbFullPath = Path.GetFullPath(Path.Combine(builder.Environment.ContentRootPath, "../", relativePath));
 
